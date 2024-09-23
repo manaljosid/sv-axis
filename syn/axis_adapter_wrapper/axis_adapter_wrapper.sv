@@ -12,11 +12,11 @@
 module axis_adapter_wrapper # (
     // No parameters
 ) (
-    input var logic     clk,
-    input var logic     reset,
+    input var logic clk,
+    input var logic reset,
 
-    AXIS_IF.Receiver    in_axis_if,
-    AXIS_IF.Transmitter out_axis_if
+    AXIS_IF.Slave   in_axis_if,
+    AXIS_IF.Master  out_axis_if
 );
 
     localparam int IN_DATA_WIDTH   = in_axis_if.TDATA_WIDTH;

@@ -31,7 +31,7 @@ interface AXIS_IF # (
     var logic [(TUSER_WIDTH > 0 ? TUSER_WIDTH : 1)-1:0] tuser;  // Ensure bit width doesn't become negative
     var logic                                           twakeup;
 
-    modport Transmitter (
+    modport Master (
         output tvalid,
         input tready,
 
@@ -45,7 +45,7 @@ interface AXIS_IF # (
         output twakeup
     );
 
-    modport Receiver (
+    modport Slave (
         input tvalid,
         output tready,
 
@@ -59,7 +59,7 @@ interface AXIS_IF # (
         input twakeup
     );
 
-    modport Monitor (
+    modport Observer (
         input tvalid,
         input tready,
 

@@ -29,8 +29,8 @@ module axis_async_fifo_wrapper # (
     input var logic                     tx_reset,
     input var logic                     rx_reset,
 
-    AXIS_IF.Transmitter                 tx_axis_if,
-    AXIS_IF.Receiver                    rx_axis_if,
+    AXIS_IF.Master                      tx_axis_if,
+    AXIS_IF.Slave                       rx_axis_if,
 
     input var logic                     tx_pause_req,
     input var logic                     rx_pause_req,

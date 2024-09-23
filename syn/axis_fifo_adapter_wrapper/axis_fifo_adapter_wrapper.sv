@@ -26,8 +26,8 @@ module axis_fifo_adapter_wrapper # (
     input var logic                     clk,
     input var logic                     reset,
 
-    AXIS_IF.Receiver                    in_axis_if,
-    AXIS_IF.Transmitter                 out_axis_if,
+    AXIS_IF.Slave                       in_axis_if,
+    AXIS_IF.Master                      out_axis_if,
 
     input var logic                     pause_req,
     output var logic                    pause_ack,
