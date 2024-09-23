@@ -4,7 +4,7 @@ import random
 import vunit_common
 
 # NOTE: This assumes the location of the directories relative to where this is run from
-WORKSPACE = Path(__file__).parent / ".." / ".." / ".." / ".." / "workspace" / "modelsim"
+WORKSPACE = Path(__file__).parent / "workspace" / "modelsim"
 LIB_ROOT = Path(__file__).parent / ".." / "lib"
 SYN_ROOT = Path(__file__).parent / ".." / "syn"
 SIM_ROOT = Path(__file__).parent / ".." / "sim"
