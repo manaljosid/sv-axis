@@ -54,52 +54,52 @@ module axis_async_fifo_wrapper # (
     output var logic                    rx_status_good_frame
 );
 
-localparam int DATA_WIDTH   = in_axis_if.TDATA_WIDTH;
-localparam bit KEEP_ENABLE  = in_axis_if.TKEEP_ENABLE && (in_axis_if.TKEEP_WIDTH > 0);
-localparam int KEEP_WIDTH   = (in_axis_if.TKEEP_WIDTH > 0 ? in_axis_if.TKEEP_WIDTH : 1);
+localparam int DATA_WIDTH   = rx_axis_if.TDATA_WIDTH;
+localparam bit KEEP_ENABLE  = rx_axis_if.TKEEP_ENABLE && (rx_axis_if.TKEEP_WIDTH > 0);
+localparam int KEEP_WIDTH   = (rx_axis_if.TKEEP_WIDTH > 0 ? rx_axis_if.TKEEP_WIDTH : 1);
 localparam bit LAST_ENABLE  = 1'b1; // Last is just enabled
-localparam bit ID_ENABLE    = (in_axis_if.TID_WIDTH > 0);
-localparam int ID_WIDTH     = (in_axis_if.TID_WIDTH > 0 ? in_axis_if.TID_WIDTH : 1);
-localparam bit DEST_ENABLE  = (in_axis_if.TDEST_WIDTH > 0);
-localparam int DEST_WIDTH   = (in_axis_if.TDEST_WIDTH > 0 ? in_axis_if.TDEST_WIDTH : 1);
-localparam bit USER_ENABLE  = (in_axis_if.TUSER_WIDTH > 0);
-localparam int USER_WIDTH   = (in_axis_if.TUSER_WIDTH > 0 ? in_axis_if.TUSER_WIDTH : 1);
+localparam bit ID_ENABLE    = (rx_axis_if.TID_WIDTH > 0);
+localparam int ID_WIDTH     = (rx_axis_if.TID_WIDTH > 0 ? rx_axis_if.TID_WIDTH : 1);
+localparam bit DEST_ENABLE  = (rx_axis_if.TDEST_WIDTH > 0);
+localparam int DEST_WIDTH   = (rx_axis_if.TDEST_WIDTH > 0 ? rx_axis_if.TDEST_WIDTH : 1);
+localparam bit USER_ENABLE  = (rx_axis_if.TUSER_WIDTH > 0);
+localparam int USER_WIDTH   = (rx_axis_if.TUSER_WIDTH > 0 ? rx_axis_if.TUSER_WIDTH : 1);
 
 // Spec allows zero width TDATA but nobody seems to support it
 initial begin
-    assert (in_axis_if.TDATA_WIDTH == out_axis_if.TDATA_WIDTH && in_axis_if.TDATA_WIDTH > 0)
+    assert (rx_axis_if.TDATA_WIDTH == tx_axis_if.TDATA_WIDTH && rx_axis_if.TDATA_WIDTH > 0)
     else $error("Assertion in %m failed, AXIS IF TDATA_WIDTH should be equal and larger than zero");
 end
 
 initial begin
-    assert (in_axis_if.TID_WIDTH == out_axis_if.TID_WIDTH)
+    assert (rx_axis_if.TID_WIDTH == tx_axis_if.TID_WIDTH)
     else $error("Assertion in %m failed, AXIS IF TID_WIDTH should be equal");
 end
 
 initial begin
-    assert (in_axis_if.TDEST_WIDTH == out_axis_if.TDEST_WIDTH)
+    assert (rx_axis_if.TDEST_WIDTH == tx_axis_if.TDEST_WIDTH)
     else $error("Assertion in %m failed, AXIS IF TDEST_WIDTH should be equal");
 end
 
 initial begin
-    assert (in_axis_if.TUSER_WIDTH == out_axis_if.TUSER_WIDTH)
+    assert (rx_axis_if.TUSER_WIDTH == tx_axis_if.TUSER_WIDTH)
     else $error("Assertion in %m failed, AXIS IF TUSER_WIDTH should be equal");
 end
 
 initial begin
-    assert (in_axis_if.TKEEP_ENABLE == out_axis_if.TKEEP_ENABLE)
+    assert (rx_axis_if.TKEEP_ENABLE == tx_axis_if.TKEEP_ENABLE)
     else $error("Assertion in %m failed, AXIS IF TKEEP_ENABLE should be equal");
 end
 
 initial begin
-    assert (in_axis_if.TWAKEUP_ENABLE == 0 && out_axis_if.TWAKEUP_ENABLE == 0)
+    assert (rx_axis_if.TWAKEUP_ENABLE == 0 && tx_axis_if.TWAKEUP_ENABLE == 0)
     else $error("Assertion in %m failed, AXIS IF TWAKEUP_ENABLE should be 0");
 end
 
 // Driving these signals to zero since they're not supported by the fifo
 always_comb begin
-    out_axis_if.tstrb = '0;
-    out_axis_if.twakeup = 1'b0;
+    tx_axis_if.tstrb = '0;
+    tx_axis_if.twakeup = 1'b0;
 end
 
 axis_async_fifo # (
@@ -132,23 +132,23 @@ axis_async_fifo # (
     .m_rst(tx_reset),
     .s_rst(rx_reset),
 
-    .s_axis_tdata(in_axis_if.tdata),
-    .s_axis_tkeep(in_axis_if.tkeep),
-    .s_axis_tvalid(in_axis_if.tvalid),
-    .s_axis_tready(in_axis_if.tready),
-    .s_axis_tlast(in_axis_if.tlast),
-    .s_axis_tid(in_axis_if.tid),
-    .s_axis_tdest(in_axis_if.tdest),
-    .s_axis_tuser(in_axis_if.tuser),
+    .s_axis_tdata(rx_axis_if.tdata),
+    .s_axis_tkeep(rx_axis_if.tkeep),
+    .s_axis_tvalid(rx_axis_if.tvalid),
+    .s_axis_tready(rx_axis_if.tready),
+    .s_axis_tlast(rx_axis_if.tlast),
+    .s_axis_tid(rx_axis_if.tid),
+    .s_axis_tdest(rx_axis_if.tdest),
+    .s_axis_tuser(rx_axis_if.tuser),
 
-    .m_axis_tdata(out_axis_if.tdata),
-    .m_axis_tkeep(out_axis_if.tkeep),
-    .m_axis_tvalid(out_axis_if.tvalid),
-    .m_axis_tready(out_axis_if.tready),
-    .m_axis_tlast(out_axis_if.tlast),
-    .m_axis_tid(out_axis_if.tid),
-    .m_axis_tdest(out_axis_if.tdest),
-    .m_axis_tuser(out_axis_if.tuser),
+    .m_axis_tdata(tx_axis_if.tdata),
+    .m_axis_tkeep(tx_axis_if.tkeep),
+    .m_axis_tvalid(tx_axis_if.tvalid),
+    .m_axis_tready(tx_axis_if.tready),
+    .m_axis_tlast(tx_axis_if.tlast),
+    .m_axis_tid(tx_axis_if.tid),
+    .m_axis_tdest(tx_axis_if.tdest),
+    .m_axis_tuser(tx_axis_if.tuser),
 
     .m_pause_req(tx_pause_req),
     .s_pause_req(rx_pause_req),
